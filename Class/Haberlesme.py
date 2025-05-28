@@ -1,18 +1,41 @@
 import serial
 import time
 
-def adım_gonder(adim):
-    adim=(adim*1.3)
-    try:
-        arduino= serial.Serial('/dev/ttyUSB0', 9600)
+class Arduino:
+    def __init__(self, port, baudrate=9600):
+        self.port = port
+        self.baudrate = baudrate
+        self.serial_connection = None
 
-        time.sleep(2)  # Arduino'nun açılması/reseti için bekle
+    def connect(self):
+        try:
+            self.serial_connection = serial.Serial(self.port, self.baudrate, timeout=1)
+            time.sleep(2)  # SADECE İLK BAĞLANTIDA Arduino'nun resetlenmesi için bekle
+            print(f"Arduino ile {self.port} portunda bağlantı kuruldu.")
+            return True
+        except serial.SerialException as e:
+            print(f"Seri bağlantı hatası: {e}")
+            self.serial_connection = None
+            return False
 
-        veri = f"{adim}\n"
-        arduino.write(veri.encode())  # Veriyi gönder
-        print(f"{adim} adım gönderildi.")
+    def disconnect(self):
+        if self.serial_connection and self.serial_connection.is_open:
+            self.serial_connection.close()
+            print("Arduino bağlantısı kesildi.")
 
-        arduino.close()
-    except serial.SerialException as e:
-        print(f"Seri bağlantı hatası: {e}")
+    def send_data(self, data):
+        if self.serial_connection and self.serial_connection.is_open:
+            try:
+                message = f"{data}\n"
+                self.serial_connection.write(message.encode())
+                # print(f"Gönderildi: {data}") # Hata ayıklama için açılabilir
+                return True
+            except Exception as e:
+                print(f"Veri gönderme hatası: {e}")
+                return False
+        else:
+            print("Bağlantı kapalı, veri gönderilemiyor.")
+            return False
 
+    def is_connected(self):
+        return self.serial_connection and self.serial_connection.is_open
