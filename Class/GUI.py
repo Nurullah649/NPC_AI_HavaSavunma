@@ -13,6 +13,7 @@ from PyQt6.QtWidgets import (
 from .Chapter1 import Chapter1
 from .Chapter2 import Chapter2
 from .Chapter3 import Chapter3
+from .Haberlesme import Arduino
 
 
 class CameraApp(QWidget):
@@ -20,6 +21,9 @@ class CameraApp(QWidget):
 
     def __init__(self):
         super().__init__()
+        self.arduino = Arduino(port='/dev/ttyUSB0') # Portu doğru ayarlayın
+        if not self.arduino.connect():
+            self.video_and_text.append("Arduino bağlanamadı!")
         # Arka plan
         self.setStyleSheet(
             """
@@ -185,7 +189,9 @@ class CameraApp(QWidget):
                     2,
                 )
                 time.sleep(1)
-                adım_gonder(dy)
+                adim = dy * 1.3 # Hesaplamayı burada yapın
+                if self.arduino.is_connected():
+                    self.arduino.send_data(int(adim))
 
                 # Crosshair ile nesne merkezi arasında çizgi
                 center_x = int((x1 + x2) / 2)  # sadece çizmek için X yine lazım
