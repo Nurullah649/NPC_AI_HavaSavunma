@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="VcsDirectoryMappings">
+    <mapping directory="" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/librealsense" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/librealsense/build/third-party/json" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/librealsense/build/third-party/libcurl" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/librealsense/build/third-party/pybind11" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/librealsense/build/third-party/pybind11-json" vcs="Git" />
+  </component>
+</project>
